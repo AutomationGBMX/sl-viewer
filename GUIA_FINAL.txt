@@ -1,0 +1,160 @@
+╔════════════════════════════════════════════════════════════════════════════════╗
+║     GUIA FINAL - GIT + RENDER                                                 ║
+║     Deploy em 5 minutos!                                                      ║
+╚════════════════════════════════════════════════════════════════════════════════╝
+
+ESTRUTURA DA PASTA
+═══════════════════════════════════════════════════════════════════════════════
+
+sl_viewer_render_clean/
+├── app.py                    ← Aplicação Flask
+├── requirements.txt          ← Dependências
+├── Procfile                  ← Instrução para Render
+├── runtime.txt               ← Versão Python
+├── templates/
+│   └── index.html           ← Interface web
+└── static/
+    └── css/
+        └── style.css        ← Estilização
+
+
+PASSO 1: ATUALIZAR O GIT (5 MINUTOS)
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Abra o Prompt de Comando
+
+2. Navegue até a pasta:
+   cd C:\Users\961955\Downloads\sl_viewer_render_clean
+
+3. Execute estes comandos:
+
+   git init
+
+   git add .
+
+   git commit -m "Clean version for Render"
+
+   git remote add origin https://github.com/AutomationGBMX/sl-viewer.git
+
+   git push -u origin main --force
+
+   (O --force sobrescreve a versão anterior)
+
+
+PASSO 2: VERIFICAR NO GITHUB
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Vá para: https://github.com/AutomationGBMX/sl-viewer
+
+2. Verifique se os arquivos foram atualizados:
+   - app.py (novo)
+   - requirements.txt (simplificado)
+   - Procfile
+   - runtime.txt
+   - templates/index.html
+   - static/css/style.css
+
+
+PASSO 3: FAZER DEPLOY NO RENDER
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Vá para: https://render.com/
+
+2. Faça login (ou crie conta com GitHub)
+
+3. Clique em "Deployments" (no menu esquerdo)
+
+4. Procure por "sl-viewer"
+
+5. Clique em "Redeploy" (botão de atualizar)
+
+6. Aguarde 2-3 minutos
+
+
+PASSO 4: ACESSAR A APLICAÇÃO
+═══════════════════════════════════════════════════════════════════════════════
+
+1. Quando o deploy terminar, você verá um link como:
+   https://sl-viewer-abc123.onrender.com/
+
+2. Clique no link ou copie e cole no navegador
+
+3. Pronto! A aplicação está funcionando! 🎉
+
+
+COMPARTILHAR COM TERCEIROS
+═══════════════════════════════════════════════════════════════════════════════
+
+O link funciona para qualquer pessoa, em qualquer lugar:
+
+https://sl-viewer-abc123.onrender.com/
+
+Compartilhe por:
+- Email
+- Teams
+- WhatsApp
+- SharePoint
+
+
+DADOS DE EXEMPLO
+═══════════════════════════════════════════════════════════════════════════════
+
+No primeiro acesso, a aplicação mostra dados de exemplo.
+
+Se você quiser usar dados reais:
+1. Exporte seus dados do Access para Excel (.xlsx)
+2. Salve como "dados.xlsx" na pasta
+3. Faça upload para o Git:
+   git add dados.xlsx
+   git commit -m "Add data"
+   git push origin main
+4. O Render fará deploy automaticamente
+
+
+FILTROS FUNCIONAIS
+═══════════════════════════════════════════════════════════════════════════════
+
+✓ Filtro de Ref (texto)
+✓ Filtro de Cod_Z (texto)
+✓ Filtro de Conceito_P (dropdown)
+✓ Filtro de Conceito_St (dropdown)
+✓ Botão "Limpar Filtros"
+✓ Modal de detalhes ao clicar em uma SL
+
+
+RESOLVER PROBLEMAS
+═══════════════════════════════════════════════════════════════════════════════
+
+Erro: "Repository not found"
+─────────────────────────────
+
+Solução: Verifique se o repositório existe no GitHub:
+https://github.com/AutomationGBMX/sl-viewer
+
+
+Erro: "Build failed"
+──────────────────────
+
+Solução: Verifique os logs no Render:
+1. Vá para https://render.com/
+2. Clique em "sl-viewer"
+3. Clique em "Logs"
+4. Procure por mensagens de erro
+
+
+Aplicação não carrega dados
+────────────────────────────
+
+Solução: Está usando dados de exemplo. Para usar dados reais:
+1. Coloque um arquivo Excel na pasta
+2. Faça upload para o Git
+3. Faça deploy novamente
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+PRONTO! Você tem tudo que precisa! 🚀
+
+Qualquer dúvida, me avise!
+
+═══════════════════════════════════════════════════════════════════════════════

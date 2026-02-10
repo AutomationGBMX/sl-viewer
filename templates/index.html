@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status da Fila de Projetos - SL Viewer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Status da Fila de Projetos</h1>
+        
+        <div class="info-bar">
+            <span class="timestamp">Atualizado em: {{ timestamp }}</span>
+            <button id="btnLimparFiltros" class="btn-limpar">Limpar Filtros</button>
+        </div>
+
+        <div class="table-wrapper">
+            <table id="dataTable" class="data-table">
+                <thead>
+                    <tr class="header-row">
+                        <th class="col-ref">Ref</th>
+                        <th>Descrição</th>
+                        <th>Solicitante</th>
+                        <th>Cod_Z</th>
+                        <th>Aplicação</th>
+                        <th>Vagão</th>
+                        <th>Conceito_P</th>
+                        <th>Conceito_St</th>
+                        <th>Conceito_Ini</th>
+                        <th>Conceito_Fim</th>
+                    </tr>
+                    <tr class="filter-row">
+                        <th class="col-ref"><input type="text" id="filter-ref" class="filter-input" placeholder="Filtrar..."></th>
+                        <th></th>
+                        <th></th>
+                        <th><input type="text" id="filter-cod-z" class="filter-input" placeholder="Filtrar..."></th>
+                        <th></th>
+                        <th></th>
+                        <th>
+                            <select id="filter-conceito-p" class="filter-select">
+                                <option value="">Todos</option>
+                                {% for opcao in conceito_p_opcoes %}
+                                <option value="{{ opcao }}">{{ opcao }}</option>
+                                {% endfor %}
+                            </select>
+                        </th>
+                        <th>
+                            <select id="filter-conceito-st" class="filter-select">
+                                <option value="">Todos</option>
+                                {% for opcao in conceito_st_opcoes %}
+                                <option value="{{ opcao }}">{{ opcao }}</option>
+                                {% endfor %}
+                            </select>
+                        </th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Preenchido por JavaScript -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal de Detalhes -->
+    <div id="modalDetalhe" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="detalheConteudo">
+                <!-- Preenchido por JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dados da tabela em JSON
+        const dadosTabela = {{ dados_json | safe }};
+        
+        // Função para renderizar a tabela
+        function renderizarTabela(dados) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+            
+            dados.forEach((linha, index) => {
+                const tr = document.createElement('tr');
+                tr.className = 'data-row';
+                tr.dataset.index = index;
+                
+                // Cria as células
+                const colunas = Object.keys(linha);
+                colunas.forEach(coluna => {
+                    const td = document.createElement('td');
+                    td.textContent = linha[coluna] !== null ? linha[coluna] : '';
+                    tr.appendChild(td);
+                });
+                
+                // Adiciona evento de clique para abrir o modal
+                tr.addEventListener('click', () => abrirModal(index, linha));
+                
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Função para abrir o modal com detalhes
+        function abrirModal(index, linha) {
+            const modal = document.getElementById('modalDetalhe');
+            const conteudo = document.getElementById('detalheConteudo');
+            
+            // Cria o HTML do modal
+            let html = '<div class="modal-header">';
+            html += `<h2>Detalhes da SL: ${linha.Ref || 'N/A'}</h2>`;
+            html += '</div>';
+            html += '<div class="modal-body">';
+            
+            // Agrupa as informações em seções
+            html += '<div class="info-section">';
+            html += '<h3>Informações Gerais</h3>';
+            html += '<div class="info-grid">';
+            html += `<div class="info-item"><label>Ref:</label><span>${linha.Ref || 'N/A'}</span></div>`;
+            html += `<div class="info-item"><label>Descrição:</label><span>${linha.Descrição || 'N/A'}</span></div>`;
+            html += `<div class="info-item"><label>Solicitante:</label><span>${linha.Solicitante || 'N/A'}</span></div>`;
+            html += `<div class="info-item"><label>Cod_Z:</label><span>${linha.Cod_Z || 'N/A'}</span></div>`;
+            html += '</div>';
+            html += '</div>';
+            
+            html += '<div class="info-section">';
+            html += '<h3>Status e Conceitos</h3>';
+            html += '<div class="info-grid">';
+            html += `<div class="info-item"><label>Aplicação:</label><span>${linha.Aplicacao || 'N/A'}</span></div>`;
+            html += `<div class="info-item"><label>Vagão:</label><span>${linha.Vagao || 'N/A'}</span></div>`;
+            html += `<div class="info-item"><label>Conceito_P:</label><span>${linha.Conceito_P || 'N/A'}</span></div>`;
+            html += `<div class="info-item"><label>Conceito_St:</label><span>${linha.Conceito_St || 'N/A'}</span></div>`;
+            html += `<div class="info-item"><label>Conceito_Ini:</label><span>${linha.Conceito_Ini || 'N/A'}</span></div>`;
+            html += `<div class="info-item"><label>Conceito_Fim:</label><span>${linha.Conceito_Fim || 'N/A'}</span></div>`;
+            html += '</div>';
+            html += '</div>';
+            
+            // Adiciona outras colunas que possam existir
+            const colunasAdicionais = Object.keys(linha).filter(col => 
+                !['Ref', 'Descrição', 'Solicitante', 'Cod_Z', 'Aplicacao', 'Vagao', 'Conceito_P', 'Conceito_St', 'Conceito_Ini', 'Conceito_Fim'].includes(col)
+            );
+            
+            if (colunasAdicionais.length > 0) {
+                html += '<div class="info-section">';
+                html += '<h3>Informações Adicionais</h3>';
+                html += '<div class="info-grid">';
+                colunasAdicionais.forEach(col => {
+                    html += `<div class="info-item"><label>${col}:</label><span>${linha[col] || 'N/A'}</span></div>`;
+                });
+                html += '</div>';
+                html += '</div>';
+            }
+            
+            html += '</div>';
+            
+            conteudo.innerHTML = html;
+            modal.style.display = 'block';
+        }
+
+        // Função para fechar o modal
+        function fecharModal() {
+            const modal = document.getElementById('modalDetalhe');
+            modal.style.display = 'none';
+        }
+
+        // Função para aplicar filtros
+        function aplicarFiltros() {
+            const filterRef = document.getElementById('filter-ref').value.toLowerCase();
+            const filterCodZ = document.getElementById('filter-cod-z').value.toLowerCase();
+            const filterConceitoP = document.getElementById('filter-conceito-p').value;
+            const filterConceitoSt = document.getElementById('filter-conceito-st').value;
+            
+            const linhas = document.querySelectorAll('.data-row');
+            
+            linhas.forEach(linha => {
+                const colunas = linha.querySelectorAll('td');
+                const ref = colunas[0].textContent.toLowerCase();
+                const codZ = colunas[3].textContent.toLowerCase();
+                const conceitoP = colunas[6].textContent;
+                const conceitoSt = colunas[7].textContent;
+                
+                let mostrar = true;
+                
+                if (filterRef && ref.indexOf(filterRef) === -1) mostrar = false;
+                if (filterCodZ && codZ.indexOf(filterCodZ) === -1) mostrar = false;
+                if (filterConceitoP && conceitoP !== filterConceitoP) mostrar = false;
+                if (filterConceitoSt && conceitoSt !== filterConceitoSt) mostrar = false;
+                
+                linha.style.display = mostrar ? '' : 'none';
+            });
+        }
+
+        // Função para limpar filtros
+        function limparFiltros() {
+            document.getElementById('filter-ref').value = '';
+            document.getElementById('filter-cod-z').value = '';
+            document.getElementById('filter-conceito-p').value = '';
+            document.getElementById('filter-conceito-st').value = '';
+            aplicarFiltros();
+        }
+
+        // Event listeners
+        document.getElementById('filter-ref').addEventListener('keyup', aplicarFiltros);
+        document.getElementById('filter-cod-z').addEventListener('keyup', aplicarFiltros);
+        document.getElementById('filter-conceito-p').addEventListener('change', aplicarFiltros);
+        document.getElementById('filter-conceito-st').addEventListener('change', aplicarFiltros);
+        
+        document.getElementById('btnLimparFiltros').addEventListener('click', limparFiltros);
+        
+        document.querySelector('.close').addEventListener('click', fecharModal);
+        
+        window.addEventListener('click', (event) => {
+            const modal = document.getElementById('modalDetalhe');
+            if (event.target === modal) {
+                fecharModal();
+            }
+        });
+
+        // Renderiza a tabela ao carregar a página
+        renderizarTabela(dadosTabela);
+    </script>
+</body>
+</html>
